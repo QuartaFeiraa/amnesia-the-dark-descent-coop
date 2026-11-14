@@ -1,0 +1,177 @@
+name: PORTAS V2 - corrigir fechamento automatico
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compilar-portas-v2:
+    runs-on: windows-2022
+    steps:
+      - name: Obter codigo original do mod
+        uses: actions/checkout@v4
+        with:
+          repository: bogdanspbm/amnesia-the-dark-descent-coop
+          ref: v0.1.0
+      - name: Aplicar V2 (estado + posicao fisica da porta)
+        shell: pwsh
+        run: |
+          $b64 = @'
+          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
+          '@
+          $source = [IO.MemoryStream]::new([Convert]::FromBase64String(($b64 -replace '\s', '')))
+          $unzip = [IO.Compression.GZipStream]::new($source, [IO.Compression.CompressionMode]::Decompress)
+          $dest = [IO.File]::Create('door-v2.patch')
+          try { $unzip.CopyTo($dest) } finally { $dest.Dispose(); $unzip.Dispose(); $source.Dispose() }
+          & git apply --check door-v2.patch
+          if($LASTEXITCODE -ne 0) { throw 'Patch V2 incompativel com o codigo original' }
+          & git apply door-v2.patch
+          if($LASTEXITCODE -ne 0) { throw 'Nao foi possivel aplicar o patch V2' }
+      - name: Compilar executavel Windows IP / Radmin
+        shell: pwsh
+        run: ./build/build_windows.ps1
+      - name: Preparar atualizador facil para os dois PCs
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path 'saida' -Force | Out-Null
+          $exe='amnesia/redist/Amnesia.exe'
+          if(!(Test-Path $exe)) { throw 'Executavel nao foi gerado' }
+          if((Get-Item $exe).Length -lt 1000000) { throw 'Executavel compilado invalido ou incompleto' }
+          Copy-Item -LiteralPath $exe -Destination 'saida/Amnesia_coop.exe'
+          $a = @'
+          77u/I3JlcXVpcmVzIC1WZXJzaW9uIDUuMQokRXJyb3JBY3Rpb25QcmVmZXJlbmNlID0gJ1N0b3An
+          CiRyb290ID0gU3BsaXQtUGF0aCAtUGFyZW50ICRNeUludm9jYXRpb24uTXlDb21tYW5kLlBhdGgK
+          JGZpeCA9IEpvaW4tUGF0aCAkcm9vdCAnQW1uZXNpYV9jb29wLmV4ZScKaWYgKC1ub3QgKFRlc3Qt
+          UGF0aCAtTGl0ZXJhbFBhdGggJGZpeCAtUGF0aFR5cGUgTGVhZikpIHsgdGhyb3cgJ0ZhbHRhIG8g
+          bm92byBBbW5lc2lhX2Nvb3AuZXhlLiBCYWl4ZSBvIGFydGVmYXRvIHByb250byBlbSBBY3Rpb25z
+          ID4gSE9URklYX1BPUlRBU19BTU5FU0lBX1dJTjMyLicgfQppZiAoR2V0LVByb2Nlc3MgLU5hbWUg
+          J0FtbmVzaWFfY29vcCcgLUVycm9yQWN0aW9uIFNpbGVudGx5Q29udGludWUpIHsgdGhyb3cgJ0Zl
+          Y2hlIG8gQW1uZXNpYSBjb29wIGFudGVzIGRlIGluc3RhbGFyLicgfQpmdW5jdGlvbiB2YWxpZChb
+          c3RyaW5nXSRwKSB7IHJldHVybiAkcCAtYW5kIChUZXN0LVBhdGggLUxpdGVyYWxQYXRoIChKb2lu
+          LVBhdGggJHAgJ0FtbmVzaWEuZXhlJykgLVBhdGhUeXBlIExlYWYpIC1hbmQgKFRlc3QtUGF0aCAt
+          TGl0ZXJhbFBhdGggKEpvaW4tUGF0aCAkcCAnQW1uZXNpYV9jb29wLmV4ZScpIC1QYXRoVHlwZSBM
+          ZWFmKSB9CiRnYW1lID0gJG51bGwKJHN0ZWFtUm9vdHMgPSBAKCIke2VudjpQcm9ncmFtRmlsZXMo
+          eDg2KX1cU3RlYW0iLCAiJGVudjpQcm9ncmFtRmlsZXNcU3RlYW0iLCAiRDpcU3RlYW1MaWJyYXJ5
+          IiwgIkU6XFN0ZWFtTGlicmFyeSIsICJGOlxTdGVhbUxpYnJhcnkiKQpmb3JlYWNoICgkYmFzZSBp
+          biAkc3RlYW1Sb290cykgewogIGZvcmVhY2ggKCRyZWxhdGl2ZSBpbiBAKCdzdGVhbWFwcHNcY29t
+          bW9uXEFtbmVzaWEgVGhlIERhcmsgRGVzY2VudCcsJ3N0ZWFtYXBwc1xjb21tb25cQW1uZXNpYSBU
+          aGUgRGFyayBEZXNjZW50XHJlZGlzdCcpKSB7CiAgICAkcD1Kb2luLVBhdGggJGJhc2UgJHJlbGF0
+          aXZlCiAgICBpZiAodmFsaWQgJHApIHsgJGdhbWU9JHA7IGJyZWFrIH0KICB9CiAgaWYgKCRnYW1l
+          KSB7IGJyZWFrIH0KfQppZiAoLW5vdCAkZ2FtZSkgewogIFdyaXRlLUhvc3QgJ0NvbGUgbyBDQU1J
+          TkhPIGRhIHBhc3RhIGNvbSBBbW5lc2lhLmV4ZSBlIEFtbmVzaWFfY29vcC5leGUgKHVzZSBTaGlm
+          dCArIGJvdGFvIGRpcmVpdG8gbm8gRXhwbG9yZXIgPiBDb3BpYXIgY29tbyBjYW1pbmhvKS4nIC1G
+          b3JlZ3JvdW5kQ29sb3IgQ3lhbgogICRnYW1lID0gKFJlYWQtSG9zdCAnUGFzdGEgZG8gam9nbycp
+          LlRyaW0oKS5UcmltKCciJykKfQppZiAoLW5vdCAodmFsaWQgJGdhbWUpKSB7IHRocm93ICdQYXN0
+          YSBpbmNvcnJldGEgb3UgbW9kIGFpbmRhIG5hbyBpbnN0YWxhZG8uIE5hZGEgZm9pIGFsdGVyYWRv
+          LicgfQokZnM9W0lPLkZpbGVdOjpPcGVuUmVhZCgkZml4KQp0cnkgewogICRyID0gTmV3LU9iamVj
+          dCBJTy5CaW5hcnlSZWFkZXIoJGZzKQogIGlmKCRyLlJlYWRVSW50MTYoKSAtbmUgMHg1YTRkKSB7
+          IHRocm93ICdFeGVjdXRhdmVsIGludmFsaWRvIChNWiBhdXNlbnRlKS4nIH0KICAkZnMuU2Vlaygw
+          eDNjLFtJTy5TZWVrT3JpZ2luXTo6QmVnaW4pIHwgT3V0LU51bGwKICAkb2ZmPSRyLlJlYWRJbnQz
+          MigpCiAgaWYoJG9mZiAtbHQgNjQgLW9yICRvZmYgLWd0IDQwOTYpIHsgdGhyb3cgJ0V4ZWN1dGF2
+          ZWwgaW52YWxpZG8gKFBFIG9mZnNldCkuJyB9CiAgJGZzLlNlZWsoJG9mZixbSU8uU2Vla09yaWdp
+          bl06OkJlZ2luKSB8IE91dC1OdWxsCiAgaWYoJHIuUmVhZFVJbnQzMigpIC1uZSAweDQ1NTApIHsg
+          dGhyb3cgJ0V4ZWN1dGF2ZWwgaW52YWxpZG8gKFBFIGF1c2VudGUpLicgfQogIGlmKCRyLlJlYWRV
+          SW50MTYoKSAtbmUgMHgxNGMpIHsgdGhyb3cgJ0V4ZWN1dGF2ZWwgbmFvIGUgV2luZG93cyB4ODYu
+          JyB9Cn0gZmluYWxseSB7ICRmcy5EaXNwb3NlKCkgfQokb3JpZz1Kb2luLVBhdGggJGdhbWUgJ0Ft
+          bmVzaWFfY29vcC5leGUnCiRiYWNrdXAgPSBKb2luLVBhdGggJGdhbWUgKCdBbW5lc2lhX2Nvb3Au
+          ZXhlLkJBQ0tVUF9QT1JUQVNfVjJfJyArIChHZXQtRGF0ZSAtRm9ybWF0ICd5eXl5TU1kZF9ISG1t
+          c3MnKSkKQ29weS1JdGVtIC1MaXRlcmFsUGF0aCAkb3JpZyAtRGVzdGluYXRpb24gJGJhY2t1cCAt
+          RXJyb3JBY3Rpb24gU3RvcAp0cnkgeyBDb3B5LUl0ZW0gLUxpdGVyYWxQYXRoICRmaXggLURlc3Rp
+          bmF0aW9uICRvcmlnIC1Gb3JjZSAtRXJyb3JBY3Rpb24gU3RvcCB9IGNhdGNoIHsKICBDb3B5LUl0
+          ZW0gLUxpdGVyYWxQYXRoICRiYWNrdXAgLURlc3RpbmF0aW9uICRvcmlnIC1Gb3JjZQogIHRocm93
+          Cn0KV3JpdGUtSG9zdCAoJ1tPS10gUG9ydGFzIFYyIGF0dWFsaXphZGFzIGVtOiAnICsgJGdhbWUp
+          IC1Gb3JlZ3JvdW5kQ29sb3IgR3JlZW4KV3JpdGUtSG9zdCAoJ1tPS10gRXhlY3V0YXZlbCBhbnRl
+          cmlvciBndWFyZGFkbyBlbTogJyArICRiYWNrdXApIC1Gb3JlZ3JvdW5kQ29sb3IgR3JlZW4KV3Jp
+          dGUtSG9zdCAnVjI6IGluc3RhbGUgZXN0ZSBNRVNNTyB1cGRhdGUgZW0gYW1ib3Mgb3MgUENzLiBT
+          ZXVzIHNhdmVzIG5hbyBmb3JhbSBhbHRlcmFkb3MuJwo=
+          '@
+          [IO.File]::WriteAllBytes('saida/INSTALAR_PORTAS.ps1', [Convert]::FromBase64String(($a -replace '\s', '')))
+          $b = @'
+          QGVjaG8gb2ZmDQpjaGNwIDY1MDAxID5udWwNCmNkIC9kICIlfmRwMCINCnBvd2Vyc2hlbGwuZXhl
+          IC1Ob1Byb2ZpbGUgLUV4ZWN1dGlvblBvbGljeSBCeXBhc3MgLUZpbGUgIiV+ZHAwSU5TVEFMQVJf
+          UE9SVEFTLnBzMSINCmVjaG8uDQpwYXVzZQ0K
+          '@
+          [IO.File]::WriteAllBytes('saida/INSTALAR_PORTAS.cmd', [Convert]::FromBase64String(($b -replace '\s', '')))
+      - name: Entregar pacote pronto
+        uses: actions/upload-artifact@v4
+        with:
+          name: HOTFIX_PORTAS_V2_AMNESIA_WIN32
+          path: saida/*
+          if-no-files-found: error
